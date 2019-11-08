@@ -214,6 +214,11 @@ impl PublicKey {
         &mut self.0 as *mut _
     }
 
+    // Function for `pedersen.rs` <@nijynot>
+    /// Creates a new public key from a Secp256k1 public key
+    #[inline]
+    pub fn from_secp256k1_pubkey(pk: ffi::PublicKey) -> PublicKey { PublicKey(pk) }
+
     /// Creates a new public key from a secret key.
     #[inline]
     pub fn from_secret_key<C: Signing>(secp: &Secp256k1<C>,

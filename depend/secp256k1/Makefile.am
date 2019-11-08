@@ -9,6 +9,10 @@ JNI_LIB =
 endif
 include_HEADERS = include/secp256k1.h
 include_HEADERS += include/secp256k1_preallocated.h
+
+# Pedersen commitment <@nijynot>
+# include_HEADERS += include/secp256k1_commitment.h
+
 noinst_HEADERS =
 noinst_HEADERS += src/scalar.h
 noinst_HEADERS += src/scalar_4x64.h
@@ -56,6 +60,11 @@ noinst_HEADERS += contrib/lax_der_parsing.h
 noinst_HEADERS += contrib/lax_der_parsing.c
 noinst_HEADERS += contrib/lax_der_privatekey_parsing.h
 noinst_HEADERS += contrib/lax_der_privatekey_parsing.c
+
+# Pedersen commitment <@nijynot>
+# noinst_HEADERS += src/modules/commitment/main_impl.h
+# noinst_HEADERS += src/modules/commitment/pedersen_impl.h
+# noinst_HEADERS += src/modules/commitment/tests_impl.h
 
 if USE_EXTERNAL_ASM
 COMMON_LIB = libsecp256k1_common.la
@@ -180,4 +189,12 @@ endif
 
 if ENABLE_MODULE_RECOVERY
 include src/modules/recovery/Makefile.am.include
+endif
+
+if ENABLE_MODULE_COMMITMENT
+include src/modules/commitment/Makefile.am.include
+endif
+
+if ENABLE_MODULE_GENERATOR
+include src/modules/generator/Makefile.am.include
 endif
