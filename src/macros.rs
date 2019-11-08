@@ -62,7 +62,7 @@ macro_rules! impl_array_newtype {
             #[inline]
             fn cmp(&self, other: &$thing) -> ::core::cmp::Ordering {
                 self[..].cmp(&other[..])
-            }            
+            }
         }
 
         impl Clone for $thing {
@@ -168,6 +168,14 @@ macro_rules! impl_raw_debug {
             }
         }
      }
+}
+
+macro_rules! map_vec {
+  ($thing:expr, $mapfn:expr ) => {
+    $thing.iter()
+      .map($mapfn)
+      .collect::<Vec<_>>();
+  }
 }
 
 #[cfg(feature="serde")]

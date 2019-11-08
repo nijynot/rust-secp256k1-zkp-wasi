@@ -64,6 +64,8 @@ fn main() {
     base_config.define("USE_ENDOMORPHISM", Some("1"));
     #[cfg(feature = "recovery")]
     base_config.define("ENABLE_MODULE_RECOVERY", Some("1"));
+    #[cfg(feature = "commitment")]
+    base_config.define("ENABLE_MODULE_COMMITMENT", Some("1"));
 
     if let Ok(target_endian) = env::var("CARGO_CFG_TARGET_ENDIAN") {
         if target_endian == "big" {
@@ -85,4 +87,3 @@ fn main() {
                .file("depend/secp256k1/src/secp256k1.c")
                .compile("libsecp256k1.a");
 }
-

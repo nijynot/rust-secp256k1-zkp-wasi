@@ -32,6 +32,7 @@ default = ["std"]
 std = []
 rand-std = ["rand/std"]
 recovery = []
+commitment = []
 endomorphism = []
 lowmemory = []
 

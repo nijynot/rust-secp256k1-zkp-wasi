@@ -60,6 +60,10 @@ pub type EcdhHashFn = unsafe extern "C" fn(
 #[derive(Clone, Debug)]
 #[repr(C)] pub struct Context(c_int);
 
+/// Secp256k1 scratch space
+#[derive(Clone, Debug)]
+#[repr(C)] pub struct ScratchSpace(c_int);
+
 #[cfg(feature = "fuzztarget")]
 impl Context {
     pub fn flags(&self) -> u32 {
@@ -159,6 +163,13 @@ extern "C" {
                                        seed32: *const c_uchar)
                                        -> c_int;
 
+    // Scratch space
+    pub fn secp256k1_scratch_space_create(cx: *mut Context,
+                                          max_size: usize)
+                                          -> *mut ScratchSpace;
+
+    pub fn secp256k1_scratch_space_destroy(sp: *mut ScratchSpace);
+
     // Pubkeys
     pub fn secp256k1_ec_pubkey_parse(cx: *const Context, pk: *mut PublicKey,
                                      input: *const c_uchar, in_len: usize)
@@ -253,6 +264,17 @@ extern "C" {
         hashfp: EcdhHashFn,
         data: *mut c_void,
     ) -> c_int;
+
+    // Generates a pedersen commitment: *commit = blind * G + value * G2.
+	// The commitment is 33 bytes, the blinding factor is 32 bytes.
+	pub fn secp256k1_pedersen_commit(
+		ctx: *const Context,
+		commit: *mut c_uchar,
+		blind: *const c_uchar,
+		value: u64,
+		value_gen: *const c_uchar,
+		blind_gen: *const c_uchar
+	) -> c_int;
 }
 
 
@@ -364,7 +386,7 @@ unsafe fn strlen(mut str_ptr: *const c_char) -> usize {
 /// A trait for producing pointers that will always be valid in C. (assuming NULL pointer is a valid no-op)
 /// Rust doesn't promise what pointers does it give to ZST (https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts)
 /// In case the type is empty this trait will give a NULL pointer, which should be handled in C.
-/// 
+///
 pub(crate) trait CPtr {
     type Target;
     fn as_c_ptr(&self) -> *const Self::Target;
