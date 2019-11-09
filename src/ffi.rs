@@ -265,6 +265,20 @@ extern "C" {
         data: *mut c_void,
     ) -> c_int;
 
+    // ffi for `pedersen.rs` <@nijynot>
+
+    // Parse a 33-byte commitment into 64 byte internal commitment object
+    pub fn secp256k1_pedersen_commitment_parse(cx: *const Context,
+                                               commit: *mut c_uchar,
+                                               input: *const c_uchar)
+                                               -> c_int;
+
+    // Serialize a 64-byte commit object into a 33 byte serialized byte sequence
+    pub fn secp256k1_pedersen_commitment_serialize(cx: *const Context,
+                                                   output: *mut c_uchar,
+                                                   commit: *const c_uchar)
+                                                   -> c_int;
+
     // Generates a pedersen commitment: *commit = blind * G + value * G2.
 	// The commitment is 33 bytes, the blinding factor is 32 bytes.
 	pub fn secp256k1_pedersen_commit(
@@ -275,6 +289,11 @@ extern "C" {
 		value_gen: *const c_uchar,
 		blind_gen: *const c_uchar
 	) -> c_int;
+
+    // Get the public key of a pedersen commitment
+    pub fn secp256k1_pedersen_commitment_to_pubkey(
+        cx: *const Context, pk: *mut PublicKey,
+        commit: *const c_uchar) -> c_int;
 }
 
 

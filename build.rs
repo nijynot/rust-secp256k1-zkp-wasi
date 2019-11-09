@@ -51,7 +51,9 @@ fn main() {
                .define("USE_NUM_NONE", Some("1"))
                .define("USE_FIELD_INV_BUILTIN", Some("1"))
                .define("USE_SCALAR_INV_BUILTIN", Some("1"))
-               .define("ENABLE_MODULE_ECDH", Some("1"));
+               .define("ENABLE_MODULE_ECDH", Some("1"))
+               .define("ENABLE_MODULE_COMMITMENT", Some("1"))
+               .define("ENABLE_MODULE_GENERATOR", Some("1"));
 
     if cfg!(feature = "lowmemory") {
         base_config.define("ECMULT_WINDOW_SIZE", Some("4")); // A low-enough value to consume neglible memory
@@ -64,8 +66,6 @@ fn main() {
     base_config.define("USE_ENDOMORPHISM", Some("1"));
     #[cfg(feature = "recovery")]
     base_config.define("ENABLE_MODULE_RECOVERY", Some("1"));
-    #[cfg(feature = "commitment")]
-    base_config.define("ENABLE_MODULE_COMMITMENT", Some("1"));
 
     if let Ok(target_endian) = env::var("CARGO_CFG_TARGET_ENDIAN") {
         if target_endian == "big" {

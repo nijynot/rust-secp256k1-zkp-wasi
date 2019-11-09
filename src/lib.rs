@@ -161,7 +161,7 @@ pub mod ffi;
 pub mod key;
 #[cfg(feature = "recovery")]
 pub mod recovery;
-#[cfg(feature = "commitment")]
+// #[cfg(feature = "commitment")]
 pub mod pedersen;
 
 pub use key::SecretKey;

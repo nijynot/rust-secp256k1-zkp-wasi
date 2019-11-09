@@ -129,10 +129,15 @@ AC_ARG_ENABLE(module_ecdh,
     [enable_module_ecdh=$enableval],
     [enable_module_ecdh=no])
 
-AC_ARG_ENABLE(module_ecdh,
-    AS_HELP_STRING([--enable-module-commitment],[enable Pedersen commitments module (experimental)]),
+AC_ARG_ENABLE(module_commitment,
+    AS_HELP_STRING([--enable-module-commitment],[enable Pedersen commitments module [default=yes]]),
     [enable_module_commitment=$enableval],
-    [enable_module_commitment=no])
+    [enable_module_commitment=yes])
+
+AC_ARG_ENABLE(module_generator,
+    AS_HELP_STRING([--enable-module-generator],[enable NUMS generator module [default=yes]]),
+    [enable_module_generator=$enableval],
+    [enable_module_generator=yes])
 
 AC_ARG_ENABLE(module_recovery,
     AS_HELP_STRING([--enable-module-recovery],[enable ECDSA pubkey recovery module [default=no]]),
@@ -497,6 +502,10 @@ if test x"$enable_module_commitment" = x"yes"; then
   AC_DEFINE(ENABLE_MODULE_COMMITMENT, 1, [Define this symbol to enable the Pedersen commitment module])
 fi
 
+if test x"$enable_module_generator" = x"yes"; then
+  AC_DEFINE(ENABLE_MODULE_GENERATOR, 1, [Define this symbol to enable the NUMS generator module])
+fi
+
 if test x"$enable_module_recovery" = x"yes"; then
   AC_DEFINE(ENABLE_MODULE_RECOVERY, 1, [Define this symbol to enable the ECDSA pubkey recovery module])
 fi
@@ -516,14 +525,10 @@ if test x"$enable_experimental" = x"yes"; then
   AC_MSG_NOTICE([WARNING: experimental build])
   AC_MSG_NOTICE([Experimental features do not have stable APIs or properties, and may not be safe for production use.])
   AC_MSG_NOTICE([Building ECDH module: $enable_module_ecdh])
-  AC_MSG_NOTICE([Building Pedersen commitment module: $enable_module_commitment])
   AC_MSG_NOTICE([******])
 else
   if test x"$enable_module_ecdh" = x"yes"; then
     AC_MSG_ERROR([ECDH module is experimental. Use --enable-experimental to allow.])
-  fi
-  if test x"$enable_module_commitment" = x"yes"; then
-    AC_MSG_ERROR([Pedersen commitment module is experimental. Use --enable-experimental to allow.])
   fi
   if test x"$set_asm" = x"arm"; then
     AC_MSG_ERROR([ARM assembly optimization is experimental. Use --enable-experimental to allow.])
@@ -544,6 +549,7 @@ AM_CONDITIONAL([USE_BENCHMARK], [test x"$use_benchmark" = x"yes"])
 AM_CONDITIONAL([USE_ECMULT_STATIC_PRECOMPUTATION], [test x"$set_precomp" = x"yes"])
 AM_CONDITIONAL([ENABLE_MODULE_ECDH], [test x"$enable_module_ecdh" = x"yes"])
 AM_CONDITIONAL([ENABLE_MODULE_COMMITMENT], [test x"$enable_module_commitment" = x"yes"])
+AM_CONDITIONAL([ENABLE_MODULE_GENERATOR], [test x"$enable_module_generator" = x"yes"])
 AM_CONDITIONAL([ENABLE_MODULE_RECOVERY], [test x"$enable_module_recovery" = x"yes"])
 AM_CONDITIONAL([USE_JNI], [test x"$use_jni" = x"yes"])
 AM_CONDITIONAL([USE_EXTERNAL_ASM], [test x"$use_external_asm" = x"yes"])
@@ -566,6 +572,7 @@ echo "  with benchmarks         = $use_benchmark"
 echo "  with coverage           = $enable_coverage"
 echo "  module ecdh             = $enable_module_ecdh"
 echo "  module commitment       = $enable_module_commitment"
+echo "  module generator        = $enable_module_generator"
 echo "  module recovery         = $enable_module_recovery"
 echo
 echo "  asm                     = $set_asm"

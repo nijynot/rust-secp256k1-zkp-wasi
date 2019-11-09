@@ -40,7 +40,7 @@ pub struct AllPreallocated<'buf> {
 }
 
 #[cfg(feature = "std")]
-mod std_only {
+pub mod std_only {
     use super::*;
 
     /// Represents the set of capabilities needed for signing.
